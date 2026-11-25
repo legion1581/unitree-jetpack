@@ -65,8 +65,12 @@ the **rootfs** (login user, static IP, recovery-Type-C USB3 host).
 
 ## Requirements
 
-- An **x86_64 Ubuntu host** with `sudo` (the build/flash tooling is NVIDIA's; the rootfs
-  steps run aarch64 under `qemu-user-static`, installed automatically if missing).
+- An **x86_64 Ubuntu host** with `sudo`. The build/flash/backup tooling is NVIDIA's and
+  needs host packages such as `abootimg`, `xmlstarlet`, `nfs-kernel-server` and
+  `qemu-user-static`. The script checks for them before touching the board and, if any
+  are missing, runs the BSP's own `tools/l4t_flash_prerequisites.sh` (NVIDIA's full list
+  for that L4T version). To install them up front instead:
+  `sudo apt-get install -y abootimg xmlstarlet nfs-kernel-server qemu-user-static`.
 - The board's USB-C **flashing** port connected to the host. For `flash` / `backup` /
   `restore`, put the board in **recovery (RCM)** mode.
 

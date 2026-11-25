@@ -141,6 +141,28 @@ if $SUPER && [ "$CMD" != flash ] && [ "$CMD" != init ]; then
 fi
 
 need() { command -v "$1" >/dev/null || die "missing tool: $1"; }
+
+# Host packages NVIDIA's flash / backup / restore tooling needs (abootimg for boot
+# images, xmlstarlet for the flash layout, an NFS server for the initrd flash/backup,
+# qemu for apply_binaries). The official per-version list ships in the BSP as
+# tools/l4t_flash_prerequisites.sh, so run that when something is missing — before
+# the board is put to work, not minutes into a flash or backup.
+host_prereqs() {
+    local t missing=""
+    for t in abootimg xmlstarlet exportfs qemu-aarch64-static; do
+        command -v "$t" >/dev/null 2>&1 || [ -x "/usr/sbin/$t" ] || missing="$missing $t"
+    done
+    [ -z "$missing" ] && return 0
+    local pre="$LFT/tools/l4t_flash_prerequisites.sh"
+    [ -f "$pre" ] || die "missing host tools:$missing — install them: sudo apt-get install -y abootimg xmlstarlet nfs-kernel-server qemu-user-static"
+    log "missing host tools:$missing — installing NVIDIA's host prerequisites for L4T $L4T_VER"
+    ( cd "$LFT" && $SUDO bash ./tools/l4t_flash_prerequisites.sh ) || \
+        die "host prerequisites install failed — run it manually: cd $LFT && sudo ./tools/l4t_flash_prerequisites.sh"
+    for t in $missing; do
+        command -v "$t" >/dev/null 2>&1 || [ -x "/usr/sbin/$t" ] || die "still missing after prerequisites install: $t"
+    done
+    ok "host prerequisites installed"
+}
 confirm() {
     $YES && return 0
     printf '\033[33m%s\033[0m\n' "$1"
@@ -189,10 +211,9 @@ cmd_init() {
     else
         warn "BSP already extracted at $LFT (reusing; 'clean bsp' to start fresh)"
     fi
+    host_prereqs                    # NVIDIA's host packages (incl. qemu for apply_binaries)
     log "extracting sample rootfs"
     $SUDO tar xpf "$rfs_tb" -C "$LFT/rootfs/"
-    command -v qemu-aarch64-static >/dev/null 2>&1 || \
-        { log "installing qemu-user-static (needed for apply_binaries on this host)"; $SUDO apt-get install -y qemu-user-static || true; }
     log "running apply_binaries.sh"
     ( cd "$LFT" && $SUDO ./apply_binaries.sh )
 
@@ -237,6 +258,7 @@ ensure_bsp() {
         cmd_init; return
     fi
     log "using existing BSP: $LFT"
+    host_prereqs
 }
 
 # ============================================================ backup/restore =====
