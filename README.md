@@ -1,15 +1,15 @@
 # Unitree G1 JetPack
 
 <p align="center">
-  <img src="docs/header-desktop.png" alt="JetPack 7.2 desktop on the Unitree G1 — Ubuntu 24.04 with WiFi, BT and 40 W (MAXN_SUPER) live" width="100%">
-  <br><sub>JetPack 7.2 (Ubuntu 24.04) on the G1 — WiFi · BT · 40 W MAXN_SUPER all live</sub>
+  <img src="docs/header-desktop.png" alt="JetPack 7.2.2 desktop on the Unitree G1 — Ubuntu 24.04 with WiFi, BT and 40 W (MAXN_SUPER) live" width="100%">
+  <br><sub>JetPack 7.2.2 (Ubuntu 24.04) on the G1 — WiFi · BT · 40 W MAXN_SUPER all live</sub>
 </p>
 
 [![version](https://img.shields.io/badge/version-2.0.2-blue?style=flat)](VERSION)
 [![platform](https://img.shields.io/badge/platform-Jetson%20Orin%20NX-76b900?style=flat)](#supported-jetpacks)
-[![JetPack 5.1.6](https://img.shields.io/badge/JetPack-5.1.6-2ea44f?style=flat)](versions/5.1.6/)
-[![JetPack 6.2.2](https://img.shields.io/badge/JetPack-6.2.2-2ea44f?style=flat)](versions/6.2.2/)
-[![JetPack 7.2](https://img.shields.io/badge/JetPack-7.2-2ea44f?style=flat)](versions/7.2/)
+[![JetPack 5.1.8](https://img.shields.io/badge/JetPack-5.1.8-2ea44f?style=flat)](versions/5.1.8/)
+[![JetPack 6.2.3](https://img.shields.io/badge/JetPack-6.2.3-2ea44f?style=flat)](versions/6.2.3/)
+[![JetPack 7.2.2](https://img.shields.io/badge/JetPack-7.2.2-2ea44f?style=flat)](versions/7.2.2/)
 
 > [!IMPORTANT]
 > **This is the Unitree G1 EDU JetPack branch (`g1`).**
@@ -23,20 +23,20 @@ the **Unitree G1 custom carrier** (Jetson Orin NX).
 
 | JetPack | L4T | Kernel | Ubuntu | WiFi | BT | Notes |
 |--|--|--|--|:--:|:--:|--|
-| [5.1.6](versions/5.1.6/) | 35.6.4 | 5.10.216-tegra | 20.04 | ✅ | ✅ | |
-| [6.2.2](versions/6.2.2/) | 36.5.0 | 5.15.185-tegra | 22.04 | ✅ | ✅ | `--super` → **157 TOPS** |
-| [7.2](versions/7.2/)     | 39.2.0 | 6.8.12-tegra   | 24.04 | ✅ | ✅ | `--super` → **157 TOPS** |
+| [5.1.8](versions/5.1.8/) | 35.7.0 | 5.10.216-tegra | 20.04 | ✅ | ✅ | |
+| [6.2.3](versions/6.2.3/) | 36.5.2 | 5.15.199-tegra | 22.04 | ✅ | ✅ | `--super` → **157 TOPS** |
+| [7.2.2](versions/7.2.2/)     | 39.2.2 | 6.8.12-tegra   | 24.04 | ✅ | ✅ | `--super` → **157 TOPS** |
 
 All tested on hardware. Pick one with `-j <ver>`.
 
 > [!TIP]
-> **Super mode (`--super`, JetPack 6.2.2 & 7.2) boosts the Orin NX 16 GB from 100 TOPS to
+> **Super mode (`--super`, JetPack 6.2.3 & 7.2.2) boosts the Orin NX 16 GB from 100 TOPS to
 > [157 TOPS](https://developer.nvidia.com/blog/nvidia-jetpack-6-2-brings-super-mode-to-nvidia-jetson-orin-nano-and-jetson-orin-nx-modules/)** —
 > NVIDIA's MAXN_SUPER power mode (GPU up to 1173 MHz, 40 W envelope), no hardware change.
 > Verified on the G1 carrier.
 >
 > ```bash
-> ./g1_custom_jetpack.sh -j 7.2 --super flash     # also: -j 6.2.2 --super flash
+> ./g1_custom_jetpack.sh -j 7.2.2 --super flash     # also: -j 6.2.3 --super flash
 > ```
 
 <p align="center">
@@ -69,8 +69,8 @@ the **rootfs** (login user, static IP, WiFi/BT).
 ## Quick start
 
 ```bash
-# choose the JetPack with -j (required for flash). Example: 5.1.6
-JP=5.1.6
+# choose the JetPack with -j (required for flash). Example: 5.1.8
+JP=5.1.8
 
 # board in RECOVERY (RCM) with the USB-C flashing cable connected:
 ./g1_custom_jetpack.sh status            # confirm APX (bootROM recovery)
@@ -85,7 +85,7 @@ After it boots: user **`unitree` / `123`**, hostname **`ubuntu`**, wired IP
 **`192.168.123.164`** (on `eth0`), WiFi + BT up.
 
 > `-j` can also be given as the `G1_JP` environment variable
-> (e.g. `G1_JP=5.1.6 ./g1_custom_jetpack.sh init`).
+> (e.g. `G1_JP=5.1.8 ./g1_custom_jetpack.sh init`).
 
 ## Post-install: the Unitree stack
 
@@ -126,7 +126,7 @@ ports work, and where it lives in the device tree.
 and **take no version**. `clean` takes `-j` optionally.
 
 ```
--j, --jetpack <ver>     which JetPack to act on (7.2 | 6.2.2 | 5.1.6) — required for init/flash
+-j, --jetpack <ver>     which JetPack to act on (7.2.2 | 6.2.3 | 5.1.8) — required for init/flash
 init                    download + extract + patch a flash-ready BSP (into bsp/<ver>)
 flash [all|qspi]        flash the chosen JetPack; auto-runs init, rebuilds if assets changed
                           all = QSPI + NVMe rootfs (default); qspi = bootloader only
@@ -138,13 +138,13 @@ clean [all|bsp|backup]  with -j: that version's BSP; without: all BSPs. backup =
 ```
 
 ```bash
-./g1_custom_jetpack.sh -j 5.1.6 flash all     # flash 5.1.6 (builds the BSP first if needed)
-./g1_custom_jetpack.sh -j 7.2 --super flash   # flash 7.2 in Super mode (MAXN_SUPER + 40W)
+./g1_custom_jetpack.sh -j 5.1.8 flash all     # flash 5.1.8 (builds the BSP first if needed)
+./g1_custom_jetpack.sh -j 7.2.2 --super flash   # flash 7.2.2 in Super mode (MAXN_SUPER + 40W)
 ./g1_custom_jetpack.sh backup                 # no -j needed
 ```
 
 options: `--yes` skips the confirmation prompt on destructive operations. `--super`
-(JetPack 6.2.2 / 7.2) flashes NVIDIA's Super board config — it enables the **MAXN_SUPER** power
+(JetPack 6.2.3 / 7.2.2) flashes NVIDIA's Super board config — it enables the **MAXN_SUPER** power
 mode and a **40 W** mode, but draws much more power, so confirm the G1 carrier's rail
 and cooling can handle it before using it in the robot. Most operations need `sudo`;
 the script elevates the privileged steps itself.
@@ -159,7 +159,7 @@ the script elevates the privileged steps itself.
 the JetPack + L4T it was taken with:
 
 ```bash
-./g1_custom_jetpack.sh backup                 # -> backups/20260625-141233_jp6.2.2_l4t36.5.0/
+./g1_custom_jetpack.sh backup                 # -> backups/20260625-141233_jp6.2.3_l4t36.5.2/
 ./g1_custom_jetpack.sh backup my-snapshot     # -> backups/my-snapshot/   (explicit name)
 ```
 
@@ -168,7 +168,7 @@ menu to pick from. You can also pass a backup **name** (under `backups/`) or a *
 
 ```bash
 ./g1_custom_jetpack.sh restore                                    # pick from a menu
-./g1_custom_jetpack.sh restore 20260625-141233_jp6.2.2_l4t36.5.0  # by name
+./g1_custom_jetpack.sh restore 20260625-141233_jp6.2.3_l4t36.5.2  # by name
 ./g1_custom_jetpack.sh restore /mnt/usb/some-dump                 # by path
 ```
 
@@ -177,7 +177,7 @@ newest version if none exists) — they operate on whatever is on the device, so
 serves every version. No version needs to be specified.
 
 `restore` boots the dump **regardless of which JetPack was last flashed** — the R35
-restore tooling is patched (`versions/5.1.6/patches/60-fix-nvrestore-bugs.sh`) to rewrite
+restore tooling is patched (`versions/5.1.8/patches/60-fix-nvrestore-bugs.sh`) to rewrite
 **both** GPT copies and write partitions **byte-exact** (stock R35 skips the secondary GPT
 and `conv=sparse`-writes over the previous flash's bytes, which breaks boot when the prior
 flash was a different L4T generation).

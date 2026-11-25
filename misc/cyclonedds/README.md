@@ -7,4 +7,4 @@ rootfs, so `71`/`72`-style it's baked in by `74-rootfs-cyclonedds.sh` into
 
 Source: `unitree_sdk2/thirdparty/lib/aarch64/libddsc.so.0` (the build the Unitree binaries target).
 Eclipse CycloneDDS, EPL-2.0 / EDL-1.0 — redistributable. Deps: libc/libpthread/libdl only.
-Verified live on the 7.2 board: with this + eth0 + nvidia-l4t-gstreamer, video_hub streams.
+Verified live on the 7.2.2 board: with this + eth0 + nvidia-l4t-gstreamer, video_hub streams.

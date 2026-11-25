@@ -10,7 +10,7 @@
 #                         REQUIRED for init/flash. Optional for clean (scopes to one
 #                         version, else all). Ignored by backup/restore/status — those
 #                         are device ops; backup/restore auto-pick a built BSP's initrd.
-#                         e.g.  -j 5.1.6   |   -j 6.2.2   (env: G1_JP=<ver>)
+#                         e.g.  -j 5.1.8   |   -j 6.2.3   (env: G1_JP=<ver>)
 #
 # Commands:
 #   init                 download + extract + patch a flash-ready BSP into bsp/<ver>
@@ -25,7 +25,7 @@
 # Options:
 #   --yes           skip the confirmation prompt on destructive operations
 #   --super         (flash/init) use NVIDIA's "Super" board config — MAXN_SUPER + a
-#                   40W power mode. Only versions that define BOARD_CONF_SUPER (7.2).
+#                   40W power mode. Only versions that define BOARD_CONF_SUPER (7.2.2).
 #                   Orin NX pulls much more power; confirm the carrier rail + cooling.
 #   -h, --help
 #
@@ -286,10 +286,10 @@ pick_backup() {
 # releases this repo handles; otherwise the JetPack series by L4T major.
 l4t_to_jp() {
     case "$1" in
-        35.6.4) echo 5.1.6 ;; 35.6.1|35.6.0) echo 5.1.5 ;; 35.5.0) echo 5.1.4 ;;
+        35.7.0) echo 5.1.8 ;; 35.6.5) echo 5.1.7 ;; 35.6.4) echo 5.1.6 ;; 35.6.1|35.6.0) echo 5.1.5 ;; 35.5.0) echo 5.1.4 ;;
         35.4.1) echo 5.1.2 ;; 35.3.1) echo 5.1.1 ;; 35.2.1) echo 5.1 ;;
-        36.4.0) echo 6.1 ;; 36.4.3) echo 6.2 ;; 36.4.4|36.4.7) echo 6.2.1 ;; 36.5.0) echo 6.2.2 ;;
-        39.2.0) echo 7.2 ;;
+        36.4.0) echo 6.1 ;; 36.4.3) echo 6.2 ;; 36.4.4|36.4.7) echo 6.2.1 ;; 36.5.0) echo 6.2.2 ;; 36.5.2) echo 6.2.3 ;;
+        39.2.0) echo 7.2 ;; 39.2.1) echo 7.2.1 ;; 39.2.2) echo 7.2.2 ;;
         35.*) echo 5.x ;; 36.*) echo 6.x ;; 39.*) echo 7.x ;; *) echo unknown ;;
     esac
 }
@@ -339,7 +339,7 @@ cmd_backup() {
     # modern one. Both restore fine (restore auto-matches, and the R35 restore path is
     # fixed by 60-fix-nvrestore-bugs.sh) — just let the user know which they're minting.
     [ "${L4T_VER%%.*}" -lt 36 ] && \
-        warn "backing up with the R35 ($JP) tooling — the dump will use the legacy R35 schema; build 6.2.2/7.2 first if you prefer the modern R36+ format (both restore fine)"
+        warn "backing up with the R35 ($JP) tooling — the dump will use the legacy R35 schema; build 6.2.3/7.2.2 first if you prefer the modern R36+ format (both restore fine)"
     local ts stage final
     ts="$(date +%Y%m%d-%H%M%S)"
     if [ -n "$arg" ]; then                          # explicit name or path -> use as-is

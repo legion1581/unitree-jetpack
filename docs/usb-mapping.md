@@ -77,8 +77,8 @@ move:
 
 | | XUDC | xHCI | padctl |
 |--|--|--|--|
-| **R35** (5.1.6) | `/xudc@3550000` | `/xhci@3610000` | `/xusb_padctl@3520000` |
-| **R36 / R39** (6.2.2 / 7.2) | `/bus@0/usb@3550000` | `/bus@0/usb@3610000` | `/bus@0/padctl@3520000` |
+| **R35** (5.1.8) | `/xudc@3550000` | `/xhci@3610000` | `/xusb_padctl@3520000` |
+| **R36 / R39** (6.2.3 / 7.2.2) | `/bus@0/usb@3550000` | `/bus@0/usb@3610000` | `/bus@0/padctl@3520000` |
 
 The patch tool auto-detects the layout, so the same fix applies to all three versions.
 

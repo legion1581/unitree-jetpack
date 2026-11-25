@@ -16,28 +16,28 @@ misc/
 | `deb/rtkbtusb-dkms_1.19.14_arm64.deb`  | Bluetooth driver (`rtk_btusb`), DKMS source. Builds `rtk_btusb.ko`. |
 | `5.1.6-6.2.2/rtl8852bu-1.19.14-src.zip` | Plain (non-DKMS) `8852bu` (WiFi) source — `make` builds against `/lib/modules/$(uname -r)/build`. Builds on kernels up to ~6.3. |
 | `5.1.6-6.2.2/rtkbtusb-1.19.14-src.zip`  | Plain (non-DKMS) `rtk_btusb` (BT) source — `make` builds against `/lib/modules/$(uname -r)/build`. |
-| `7.2/rtl8852bu-1.19.14-k6.8-src.zip`    | **WiFi source patched for kernel 6.8** (JetPack 7.2 / Ubuntu 24.04). Same 1.19.14 source + the 6.4–6.8 API fixes below baked in. Builds `8852bu.ko` on 6.8. |
+| `7.2/rtl8852bu-1.19.14-k6.8-src.zip`    | **WiFi source patched for kernel 6.8** (JetPack 7.2.2 / Ubuntu 24.04). Same 1.19.14 source + the 6.4–6.8 API fixes below baked in. Builds `8852bu.ko` on 6.8. |
 | `7.2/rtl8852bu-1.19.14-kernel-6.8.patch` | The diff alone (3 files) — `patch -p1 <` it onto a fresh `rtl8852bu-1.19.14` to reproduce the 6.8 source. |
 
 The DKMS debs and the two `1.19.14-src.zip` sources come from the Unitree G1 EDU
 vendor image (`/home/unitree/wifi-bt-deb/`). The `rtkbtusb-1.19.14` source matters
-because the **stock NVIDIA BSP `rtk_btusb` on 5.1.6 / 6.2.2 is too old** and does not
+because the **stock NVIDIA BSP `rtk_btusb` on 5.1.8 / 6.2.3 is too old** and does not
 know our combo's USB id `0bda:a85b` (`can not find device pid in patch_table`); this
-1.19.14 source has the 8852BU table entry. (The 7.2 image already ships a current
-`rtk_btusb` v3.1, so 7.2 needs no BT driver rebuild — only the firmware blobs.)
+1.19.14 source has the 8852BU table entry. (The 7.2.2 image already ships a current
+Realtek driver v3.1 — `btrtlusb`, NVIDIA's name for `rtk_btusb` since R39.2.2 — so 7.2.2 needs no BT driver rebuild — only the firmware blobs.)
 
 ## Rebuild for a new kernel (on the target, headers installed)
 
 ```sh
-# Bluetooth (no DKMS needed) — 5.1.6 / 6.2.2:
+# Bluetooth (no DKMS needed) — 5.1.8 / 6.2.3:
 unzip 5.1.6-6.2.2/rtkbtusb-1.19.14-src.zip && cd rtkbtusb-1.19.14
 make -j"$(nproc)"          # -> rtk_btusb.ko   (uses /lib/modules/$(uname -r)/build)
 
-# WiFi (no DKMS needed) — kernel <= 6.3 (5.1.6 / 6.2.2):
+# WiFi (no DKMS needed) — kernel <= 6.3 (5.1.8 / 6.2.3):
 unzip 5.1.6-6.2.2/rtl8852bu-1.19.14-src.zip && cd rtl8852bu-1.19.14
 make -j"$(nproc)"          # -> 8852bu.ko
 
-# WiFi on kernel 6.8 (JetPack 7.2): use the patched source, pass -Wno-error
+# WiFi on kernel 6.8 (JetPack 7.2.2): use the patched source, pass -Wno-error
 # (Ubuntu's noble kernel sets CONFIG_WERROR, which turns the driver's harmless
 #  -Wmissing-prototypes warnings into errors):
 unzip 7.2/rtl8852bu-1.19.14-k6.8-src.zip && cd rtl8852bu-1.19.14
