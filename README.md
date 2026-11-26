@@ -5,7 +5,7 @@
   <br><sub>JetPack 7.2.2 (Ubuntu 24.04) desktop on the Unitree Go2 dock's Jetson</sub>
 </p>
 
-[![version](https://img.shields.io/badge/version-2.1.0-blue?style=flat)](VERSION)
+[![version](https://img.shields.io/badge/version-2.2.0-blue?style=flat)](VERSION)
 [![platform](https://img.shields.io/badge/platform-Jetson%20Orin%20NX-76b900?style=flat)](#supported-jetpacks)
 [![platform](https://img.shields.io/badge/platform-Jetson%20Orin%20Nano-76b900?style=flat)](#supported-jetpacks)
 [![JetPack 5.1.8](https://img.shields.io/badge/JetPack-5.1.8-2ea44f?style=flat)](versions/5.1.8/)
@@ -28,9 +28,18 @@ or **Orin Nano**; the flash conf auto-selects by module SKU).
 |--|--|--|--|--|
 | [5.1.8](versions/5.1.8/) | 35.7.0 | 5.10.216-tegra | 20.04 | |
 | [6.2.3](versions/6.2.3/) | 36.5.2 | 5.15.199-tegra | 22.04 | `--super` (MAXN_SUPER) |
-| [7.2.2](versions/7.2.2/)     | 39.2.2 | 6.8.12-tegra   | 24.04 | `--super` (MAXN_SUPER) |
+| [7.2.2](versions/7.2.2/) | 39.2.2 | 6.8.12-tegra   | 24.04 | `--super` (MAXN_SUPER) |
 
 Pick one with `-j <ver>`.
+
+## What's new in 2.2.0
+
+- **JetPack 5.1.8** (L4T 35.7.0), **6.2.3** (L4T 36.5.2) and **7.2.2** (L4T 39.2.2) —
+  NVIDIA's latest Orin release of each line — replace 5.1.6 / 6.2.2 / 7.2.
+- 7.2.2: carrier DTBs (recovery Type-C OTG + USB3) regenerated against NVIDIA's updated
+  stock DTBs.
+- 5.1.8: the R35 restore fix (patch 60) updated for the reworded L4T 35.7.0 tool.
+- Host prerequisites are checked (and NVIDIA's installer run) before touching the board.
 
 > [!TIP]
 > **Super mode (`--super`, JetPack 6.2.3 & 7.2.2)** unlocks NVIDIA's
