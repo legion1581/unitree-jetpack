@@ -4,7 +4,7 @@
 #        binding $NET_IFACE to $STATIC_IP (manual). gateway/dns only if set.
 # WHY:   this image uses NetworkManager (not netplan); the NIC is a point-to-point
 #        LAN, so leaving gateway/dns empty avoids a competing default route.
-# NOTE:  $NET_IFACE must match the booted name — the 7.2 image uses predictable
+# NOTE:  $NET_IFACE must match the booted name — the 7.2.2 image uses predictable
 #        names, so it is 'enP8p1s0' (see version.env), NOT 'eth0'. (Verified on boot.)
 #
 # Sourced by apply_patches() with version.env vars + $LFT $SUDO and helpers in scope.

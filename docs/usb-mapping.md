@@ -1,7 +1,7 @@
 # USB lane mapping on the Go2 carrier
 
 Why the Go2 dock needs a patched kernel DTB (+ a small boot unit), and exactly what they do
-— **verified on hardware** (Orin Nano 8GB, JetPack 5.1.6 / 6.2.2 / 7.2).
+— **verified on hardware** (Orin Nano 8GB, JetPack 5.1.8 / 6.2.3 / 7.2.2).
 
 ## Background — padctl, lanes and ports
 
@@ -65,8 +65,8 @@ instead: `systemctl stop enable-typec-host` (releases VBUS) and
 
 | JetPack | kernel | gpio interface | how the unit drives PP.06 |
 |--|--|--|--|
-| 5.1.6 | 5.10 | legacy `/sys/class/gpio` | `echo 1 > …/PP.06/value` — **persists** after the process exits |
-| 6.2.2 / 7.2 | 5.15 / 6.8 | sysfs-gpio removed → **libgpiod** | `gpioset --mode=signal $(gpiofind PP.06)=1` — the line **reverts when released**, so the process must **hold** it |
+| 5.1.8 | 5.10 | legacy `/sys/class/gpio` | `echo 1 > …/PP.06/value` — **persists** after the process exits |
+| 6.2.3 / 7.2.2 | 5.15 / 6.8 | sysfs-gpio removed → **libgpiod** | `gpioset --mode=signal $(gpiofind PP.06)=1` — the line **reverts when released**, so the process must **hold** it |
 
 The chardev GPIO model releases a line when the owning fd closes (by design — unlike sysfs,
 which leaks). So on JP6/JP7 the unit keeps `gpioset` alive for its lifetime; `systemctl stop`
@@ -85,15 +85,15 @@ Result — controllers by `phy-names` (once the unit has run):
 The Go2 carrier does **not** populate `fusb301` (`0x25` is absent on every i2c bus), yet the
 recovery Type-C is orientation-independent for USB3. So a separate autonomous CC/redriver on
 the carrier steers the SuperSpeed mux with no host software — nothing for us to configure.
-(The R35/5.1.6 DTB *did* list a `fusb301@25` node; since it's unpopulated we delete it so the
+(The R35/5.1.8 DTB *did* list a `fusb301@25` node; since it's unpopulated we delete it so the
 kernel stops chasing a phantom chip. The R36/R39 DTBs have no such node for this port.)
 
 ## Where it lives (node paths differ by L4T)
 
 | | XUDC | xHCI | padctl |
 |--|--|--|--|
-| **R35** (5.1.6) | `/xudc@3550000` | `/xhci@3610000` | `/xusb_padctl@3520000` |
-| **R36 / R39** (6.2.2 / 7.2) | `/bus@0/usb@3550000` | `/bus@0/usb@3610000` | `/bus@0/padctl@3520000` |
+| **R35** (5.1.8) | `/xudc@3550000` | `/xhci@3610000` | `/xusb_padctl@3520000` |
+| **R36 / R39** (6.2.3 / 7.2.2) | `/bus@0/usb@3550000` | `/bus@0/usb@3610000` | `/bus@0/padctl@3520000` |
 
 ## Inspect a DTB
 

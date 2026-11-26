@@ -1,8 +1,9 @@
 # 60-fix-nvrestore-bugs.sh — two R35 restore bugs that leave a restored board unbootable
 # when the disk previously held a DIFFERENT L4T generation (e.g. restoring an R36 backup
-# over a 7.2/R39 flash). Both are fixed upstream in R36+; this brings R35 in line, making
-# `restore` self-sufficient on any prior on-disk layout (no need to pre-flash the matching
-# JetPack first). Patches tools/backup_restore/nvrestore_partitions.sh in the BSP.
+# over an R39 flash). Both are fixed upstream in R36+, and R35.7.0 fixed BUG 2 (but not
+# BUG 1); this brings R35 in line, making `restore` self-sufficient on any prior on-disk
+# layout (no need to pre-flash the matching JetPack first). Patches
+# tools/backup_restore/nvrestore_partitions.sh in the BSP.
 #
 # BUG 1 — secondary GPT never restored: stock R35 handles the `gpt_2` (backup GPT) entry
 #   with `dd of="/dev/${FIELDS[2]}"` -> `/dev/gpt_2`, a nonexistent device (the bytes land
@@ -31,12 +32,14 @@ else
     if grep -qF 'gpt_2 ] && _of="${INTERNAL_STORAGE_DEVICE}"' "$_f"; then
         log "  nvrestore secondary-GPT fix already applied"
     else
+        # R35.6.x writes `bs=512`, R35.7.0 `"${options[@]}"` (status=progress + bs) — match both.
         $SUDO perl -i -pe '
             BEGIN {
-                $old = q{dd if="${FIELDS[1]}" of="/dev/${FIELDS[2]}" bs=512 seek=$((FIELDS[3])) count=$((FIELDS[4]))};
-                $new = q{_of="${FIELDS[2]}"; [ "${FIELDS[2]}" = gpt_2 ] && _of="${INTERNAL_STORAGE_DEVICE}"; dd if="${FIELDS[1]}" of="/dev/${_of}" bs=512 seek=$((FIELDS[3])) count=$((FIELDS[4]))};
+                $pre  = q{dd if="${FIELDS[1]}" of="/dev/${FIELDS[2]}" };
+                $post = q{ seek=$((FIELDS[3])) count=$((FIELDS[4]))};
+                $new  = q{_of="${FIELDS[2]}"; [ "${FIELDS[2]}" = gpt_2 ] && _of="${INTERNAL_STORAGE_DEVICE}"; dd if="${FIELDS[1]}" of="/dev/${_of}" };
             }
-            s/\Q$old\E/$new/;
+            s/\Q$pre\E(bs=512|"\$\{options\[\@\]\}")\Q$post\E/$new$1$post/;
         ' "$_f"
         if grep -qF 'gpt_2 ] && _of="${INTERNAL_STORAGE_DEVICE}"' "$_f"; then
             log "  nvrestore gpt_2 -> /dev/\$INTERNAL_STORAGE_DEVICE (secondary GPT now restored)"

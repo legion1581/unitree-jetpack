@@ -6,8 +6,8 @@
 #        still works. At runtime the port sources no VBUS until PP.06 is high (Unitree does
 #        this from /etc/rc.local, which we don't ship), and stays device/none until the
 #        role switch is driven — with VBUS on, role=host hands usb3-0's SuperSpeed to xHCI.
-#        Together they make the recovery Type-C a working USB 3.x host (verified on 5.1.6
-#        and 6.2.2: RealSense auto-enumerates at SuperSpeed).
+#        Together they make the recovery Type-C a working USB 3.x host (verified on 5.1.8
+#        and 6.2.3: RealSense auto-enumerates at SuperSpeed).
 # GPIO:  JP5/5.10 has the legacy /sys/class/gpio (value persists after set). JP6/JP7
 #        (5.15/6.8) dropped it, so we use libgpiod and must HOLD the line — hence the
 #        service is Type=simple and gpioset runs for its lifetime.

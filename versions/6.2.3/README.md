@@ -1,8 +1,8 @@
-# JetPack 7.2 — Go2 carrier
+# JetPack 6.2.3 — Go2 carrier
 
-**L4T 39.2.0** · kernel **6.8.12-1021-tegra** · Ubuntu 24.04
+**L4T 36.5.2** · kernel **5.15.199-tegra** · Ubuntu 22.04
 
-Per-version payload applied to NVIDIA's BSP by `go2_custom_jetpack.sh` (`-j 7.2`).
+Per-version payload applied to NVIDIA's BSP by `go2_custom_jetpack.sh` (`-j 6.2.3`).
 The Go2 dock has **no WiFi/BT**, so this image ships none.
 
 ## Patches
@@ -12,7 +12,7 @@ Named files in [`patches/`](patches/), applied in filename order by `apply_patch
 | step | what it changes |
 |--|--|
 | `10-install-carrier-dtb.sh` | BSP — drop the carrier-patched kernel DTB(s) (USB wiring + board-version) |
-| `20-mb2-eeprom-fix.sh` | BSP — MB2 `cvb_eeprom_read_size -> 0x0` (R39 ships 0x100, so it applies) |
+| `20-mb2-eeprom-fix.sh` | BSP — MB2 `cvb_eeprom_read_size -> 0x0` (carrier has no EEPROM) |
 | `30-rootfs-user.sh` | rootfs — user `unitree` / hostname `ubuntu` / autologin |
 | `40-rootfs-static-ip.sh` | rootfs — NetworkManager keyfile: `192.168.123.18/24` on **`enP8p1s0`** |
 | `50-enable-typec-host.sh` | rootfs — boot unit that makes the recovery Type-C a USB host: drives `PP.06` (VBUS) high **and** sets `usb2-0` role=host |
@@ -29,19 +29,19 @@ Named files in [`patches/`](patches/), applied in filename order by `apply_patch
 
 ## Notes
 
-- **L4T 39.2.0 = JetPack 7.2** (kernel 6.8, Ubuntu 24.04). Wired NIC is **`enP8p1s0`**.
+- Wired NIC is **`enP8p1s0`**.
 
-### Carrier DTB changes + recovery Type-C host (same approach as 5.1.6 / 6.2.2, R39 layout)
+### Carrier DTB changes + recovery Type-C host (same approach as 5.1.8, R36 layout)
 
 All four DTBs get the identical Go2-carrier transform:
 - **`usb2-0` → `mode = "otg"`** (from vanilla `peripheral`) with its `usb-role-switch` kept —
   device-capable so flash-time recovery RNDIS (`usb0`) still binds, but switchable to host.
 - **`usb3-0` enabled** — vanilla ships it disabled; the lane + port are turned on and the
   phy is added to the xHCI `phys`/`phy-names` (so the recovery Type-C can do SuperSpeed).
-- **`board-version`** stamped (`go2{nx,nano}[-super]-jetpack7.2-robolegion-r39.2.0-…-v2.1`).
+- **`board-version`** stamped (`go2{nx,nano}[-super]-jetpack6.2.3-robolegion-r36.5.2-…-v2.1`).
 
-(No `fusb301` node exists in the R39 DTB for this port, so there's nothing to remove — unlike
-the R35/5.1.6 DTB.)
+(No `fusb301` node exists in the R36 DTB for this port, so there's nothing to remove — unlike
+the R35/5.1.8 DTB.)
 
 > **Host is a runtime step**, not baked into the DTB — `l4t` flash forces the runtime DTB to
 > equal the recovery-initrd DTB, so a `mode="host"` DTB would break flash-time RNDIS. The DTB
@@ -59,6 +59,6 @@ Flashes NVIDIA's `jetson-orin-nano-devkit-super` board config (MAXN_SUPER + 40 W
 boost: **Orin NX 16 GB 100 → 157**, **Orin Nano 8 GB 40 → 67**. Draws much more power —
 confirm the Go2 rail + cooling first.
 
-> ⚠️ Base image hardware-verified on the Go2 dock (JetPack 7.2). The recovery Type-C **host**
-> change (otg + `usb3-0` + `PP.06`/role=host) is verified on 5.1.6 and ported here identically,
-> but is **pending on-hardware confirmation on 7.2** — flash-test it.
+> ⚠️ Base image hardware-verified on the Go2 dock (Orin Nano, JetPack 6.2.3). The recovery
+> Type-C **host** change (otg + `usb3-0` + `PP.06`/role=host) is verified on 5.1.8 and ported
+> here identically, but is **pending on-hardware confirmation on 6.2.3** — flash-test it.

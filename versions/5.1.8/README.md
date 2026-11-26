@@ -1,8 +1,8 @@
-# JetPack 5.1.6 — Go2 carrier
+# JetPack 5.1.8 — Go2 carrier
 
-**L4T 35.6.4** · kernel **5.10.216-tegra** · Ubuntu 20.04
+**L4T 35.7.0** · kernel **5.10.216-tegra** · Ubuntu 20.04
 
-Per-version payload applied to NVIDIA's BSP by `go2_custom_jetpack.sh` (`-j 5.1.6`).
+Per-version payload applied to NVIDIA's BSP by `go2_custom_jetpack.sh` (`-j 5.1.8`).
 The Go2 dock has **no WiFi/BT**, so this image ships none.
 
 ## Patches

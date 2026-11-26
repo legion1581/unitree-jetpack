@@ -1,16 +1,16 @@
 # Unitree Go2 / R1 JetPack
 
 <p align="center">
-  <img src="docs/header-desktop.png" alt="JetPack 7.2 (Ubuntu 24.04) desktop on the Unitree Go2 dock's Jetson" width="100%">
-  <br><sub>JetPack 7.2 (Ubuntu 24.04) desktop on the Unitree Go2 dock's Jetson</sub>
+  <img src="docs/header-desktop.png" alt="JetPack 7.2.2 (Ubuntu 24.04) desktop on the Unitree Go2 dock's Jetson" width="100%">
+  <br><sub>JetPack 7.2.2 (Ubuntu 24.04) desktop on the Unitree Go2 dock's Jetson</sub>
 </p>
 
 [![version](https://img.shields.io/badge/version-2.1.0-blue?style=flat)](VERSION)
 [![platform](https://img.shields.io/badge/platform-Jetson%20Orin%20NX-76b900?style=flat)](#supported-jetpacks)
 [![platform](https://img.shields.io/badge/platform-Jetson%20Orin%20Nano-76b900?style=flat)](#supported-jetpacks)
-[![JetPack 5.1.6](https://img.shields.io/badge/JetPack-5.1.6-2ea44f?style=flat)](versions/5.1.6/)
-[![JetPack 6.2.2](https://img.shields.io/badge/JetPack-6.2.2-2ea44f?style=flat)](versions/6.2.2/)
-[![JetPack 7.2](https://img.shields.io/badge/JetPack-7.2-2ea44f?style=flat)](versions/7.2/)
+[![JetPack 5.1.8](https://img.shields.io/badge/JetPack-5.1.8-2ea44f?style=flat)](versions/5.1.8/)
+[![JetPack 6.2.3](https://img.shields.io/badge/JetPack-6.2.3-2ea44f?style=flat)](versions/6.2.3/)
+[![JetPack 7.2.2](https://img.shields.io/badge/JetPack-7.2.2-2ea44f?style=flat)](versions/7.2.2/)
 
 > [!IMPORTANT]
 > **This is the Unitree Go2 & R1 EDU JetPack branch (`go2-r1`).**
@@ -26,14 +26,14 @@ or **Orin Nano**; the flash conf auto-selects by module SKU).
 
 | JetPack | L4T | Kernel | Ubuntu | Notes |
 |--|--|--|--|--|
-| [5.1.6](versions/5.1.6/) | 35.6.4 | 5.10.216-tegra | 20.04 | |
-| [6.2.2](versions/6.2.2/) | 36.5.0 | 5.15.185-tegra | 22.04 | `--super` (MAXN_SUPER) |
-| [7.2](versions/7.2/)     | 39.2.0 | 6.8.12-tegra   | 24.04 | `--super` (MAXN_SUPER) |
+| [5.1.8](versions/5.1.8/) | 35.7.0 | 5.10.216-tegra | 20.04 | |
+| [6.2.3](versions/6.2.3/) | 36.5.2 | 5.15.199-tegra | 22.04 | `--super` (MAXN_SUPER) |
+| [7.2.2](versions/7.2.2/)     | 39.2.2 | 6.8.12-tegra   | 24.04 | `--super` (MAXN_SUPER) |
 
 Pick one with `-j <ver>`.
 
 > [!TIP]
-> **Super mode (`--super`, JetPack 6.2.2 & 7.2)** unlocks NVIDIA's
+> **Super mode (`--super`, JetPack 6.2.3 & 7.2.2)** unlocks NVIDIA's
 > [**MAXN_SUPER**](https://developer.nvidia.com/blog/nvidia-jetpack-6-2-brings-super-mode-to-nvidia-jetson-orin-nano-and-jetson-orin-nx-modules/)
 > power mode (GPU up to 1173 MHz, 40 W envelope) — a big AI-throughput boost with **no
 > hardware change**, on whichever module the Go2 dock carries:
@@ -44,7 +44,7 @@ Pick one with `-j <ver>`.
 > | Jetson **Orin Nano 8 GB** | 40 TOPS | **67 TOPS** |
 >
 > ```bash
-> ./go2_custom_jetpack.sh -j 7.2 --super flash     # also: -j 6.2.2 --super flash
+> ./go2_custom_jetpack.sh -j 7.2.2 --super flash     # also: -j 6.2.3 --super flash
 > ```
 
 <p align="center">
@@ -77,8 +77,8 @@ the **rootfs** (login user, static IP, recovery-Type-C USB3 host).
 ## Quick start
 
 ```bash
-# choose the JetPack with -j (required for flash). Example: 5.1.6
-JP=5.1.6
+# choose the JetPack with -j (required for flash). Example: 5.1.8
+JP=5.1.8
 
 # board in RECOVERY (RCM) with the USB-C flashing cable connected:
 ./go2_custom_jetpack.sh status            # confirm APX (bootROM recovery)
@@ -90,12 +90,12 @@ it isn't built yet — no separate `init` step needed. Run `init` on its own onl
 you want to (re)build the BSP without flashing.
 
 After it boots: user **`unitree` / `123`**, hostname **`ubuntu`**, wired IP
-**`192.168.123.18`** (on `eth0` for 5.1.6, `enP8p1s0` for 6.2.2 / 7.2). The **recovery Type-C
+**`192.168.123.18`** (on `eth0` for 5.1.8, `enP8p1s0` for 6.2.3 / 7.2.2). The **recovery Type-C
 comes up as a USB 3.x host** (for a RealSense etc.); to use it as the device-mode gadget
 (**`192.168.55.1`**) instead, see **[docs/usb-mapping.md](docs/usb-mapping.md)**.
 
 > `-j` can also be given as the `GO2_JP` environment variable
-> (e.g. `GO2_JP=5.1.6 ./go2_custom_jetpack.sh init`).
+> (e.g. `GO2_JP=5.1.8 ./go2_custom_jetpack.sh init`).
 
 ## Recovery mode (RCM)
 
@@ -125,7 +125,7 @@ the device tree.
 and **take no version**. `clean` takes `-j` optionally.
 
 ```
--j, --jetpack <ver>     which JetPack to act on (7.2 | 6.2.2 | 5.1.6) — required for init/flash
+-j, --jetpack <ver>     which JetPack to act on (7.2.2 | 6.2.3 | 5.1.8) — required for init/flash
 init                    download + extract + patch a flash-ready BSP (into bsp/<ver>)
 flash [all|qspi]        flash the chosen JetPack; auto-runs init, rebuilds if assets changed
                           all = QSPI + NVMe rootfs (default); qspi = bootloader only
@@ -137,13 +137,13 @@ clean [all|bsp|backup]  with -j: that version's BSP; without: all BSPs. backup =
 ```
 
 ```bash
-./go2_custom_jetpack.sh -j 5.1.6 flash all     # flash 5.1.6 (builds the BSP first if needed)
-./go2_custom_jetpack.sh -j 7.2 --super flash   # flash 7.2 in Super mode (MAXN_SUPER + 40W)
+./go2_custom_jetpack.sh -j 5.1.8 flash all     # flash 5.1.8 (builds the BSP first if needed)
+./go2_custom_jetpack.sh -j 7.2.2 --super flash   # flash 7.2.2 in Super mode (MAXN_SUPER + 40W)
 ./go2_custom_jetpack.sh backup                 # no -j needed
 ```
 
 options: `--yes` skips the confirmation prompt on destructive operations. `--super`
-(JetPack 6.2.2 / 7.2) flashes NVIDIA's Super board config — it enables the **MAXN_SUPER** power
+(JetPack 6.2.3 / 7.2.2) flashes NVIDIA's Super board config — it enables the **MAXN_SUPER** power
 mode and a **40 W** mode, but draws much more power, so confirm the Go2 dock's rail
 and cooling can handle it before using it in the robot. Most operations need `sudo`;
 the script elevates the privileged steps itself.
@@ -158,7 +158,7 @@ the script elevates the privileged steps itself.
 the JetPack + L4T it was taken with:
 
 ```bash
-./go2_custom_jetpack.sh backup                 # -> backups/20260625-141233_jp6.2.2_l4t36.5.0/
+./go2_custom_jetpack.sh backup                 # -> backups/20260625-141233_jp6.2.3_l4t36.5.2/
 ./go2_custom_jetpack.sh backup my-snapshot     # -> backups/my-snapshot/   (explicit name)
 ```
 
@@ -167,7 +167,7 @@ menu to pick from. You can also pass a backup **name** (under `backups/`) or a *
 
 ```bash
 ./go2_custom_jetpack.sh restore                                    # pick from a menu
-./go2_custom_jetpack.sh restore 20260625-141233_jp6.2.2_l4t36.5.0  # by name
+./go2_custom_jetpack.sh restore 20260625-141233_jp6.2.3_l4t36.5.2  # by name
 ./go2_custom_jetpack.sh restore /mnt/usb/some-dump                 # by path
 ```
 
@@ -176,7 +176,7 @@ newest version if none exists) — they operate on whatever is on the device, so
 serves every version. No version needs to be specified.
 
 `restore` boots the dump **regardless of which JetPack was last flashed** — the R35
-restore tooling is patched (`versions/5.1.6/patches/60-fix-nvrestore-bugs.sh`) to rewrite
+restore tooling is patched (`versions/5.1.8/patches/60-fix-nvrestore-bugs.sh`) to rewrite
 **both** GPT copies and write partitions **byte-exact** (stock R35 skips the secondary GPT
 and `conv=sparse`-writes over the previous flash's bytes, which breaks boot when the prior
 flash was a different L4T generation).
